@@ -59,8 +59,6 @@ class ProductServiceTest {
         User seller = new User("seller", "seller@", "1234", "ADMIN");
         User saveSeller = userRepository.save(seller);
         UserVo userVo = new UserVo(saveSeller.getId(), saveSeller.getName(), saveSeller.getEmail(), saveSeller.getRole());
-        entityManager.flush();
-        entityManager.clear();
 
         ProductRequest productRequest = new ProductRequest("testProduct1", 12000, "Url", 1);
 
@@ -72,7 +70,6 @@ class ProductServiceTest {
 
         //when
         productService.registerProduct(productRequest, optionListRequest, userVo);
-        entityManager.clear(); //이 부분 주석 처리하면 마지막 절에서 null예외가 발생해 테스트 코드 실패합니다.
 
         //then
         assertThat(productRepository.existsById(1L)).isTrue();

@@ -33,10 +33,8 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private List<WishProduct> wishProducts;
 
-
-//    @Min(1)
-//    @Max(100000000)
-//    private int totalNumberOfOptions;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    private List<Option> options;
 
     public Product() {
 
@@ -97,6 +95,7 @@ public class Product {
         return this.category.getName();
     }
 
+
     public int getCategoryUniNum() {
         return this.category.getUniNumber();
     }
@@ -111,6 +110,10 @@ public class Product {
 
     public List<WishProduct> getWishProducts() {
         return wishProducts;
+    }
+
+    public List<Option> getOptions() {
+        return options;
     }
 
     @Override

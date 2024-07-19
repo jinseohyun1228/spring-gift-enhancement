@@ -27,7 +27,6 @@ public class Option {
     private Product product;
 
     public Option() {
-
     }
 
     public Option(String optionName, int num, Product product) {
@@ -39,7 +38,6 @@ public class Option {
     public Option(OptionRequest optionRequest, Product product) {
         this.optionName = optionRequest.name();
         this.num = optionRequest.num();
-        this.product = product;
         this.product = product;
     }
 
@@ -82,9 +80,20 @@ public class Option {
 
     }
 
+    public void add() {
+        product.getOptions().add(this);
+    }
+
     public void updateValue(OptionRequest optionRequest) {
+        product.getOptions().remove(this);
         this.optionName = optionRequest.name();
         this.num = optionRequest.num();
+        product.getOptions().add(this);
+
+    }
+
+    public void remove() {
+        product.getOptions().remove(this);
     }
 
     @Override

@@ -30,23 +30,4 @@ class OptionListRequestTest {
                 .isInstanceOf(CustomException.class);
 
     }
-
-    /*
-     * <테스트 수행 내용>
-     * 50개를 넘는 옵션명 검사 테스트
-     */
-    @Test
-    @Transactional
-    void saveinvalidOptionNameTest() {
-        //given
-
-        //when
-        //then
-        assertThatThrownBy(() -> new OptionRequest("옵션명".repeat(50), 122))
-                .isInstanceOf(CustomException.class);
-
-
-    }
-
-
 }

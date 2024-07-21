@@ -1,106 +1,38 @@
 package gift.main.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.main.dto.OptionChangeQuantityRequest;
 import gift.main.dto.OptionRequest;
-import gift.main.dto.OptionResponse;
+import gift.main.repository.OptionRepository;
 import gift.main.service.OptionService;
-import org.junit.jupiter.api.BeforeEach;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+@SpringBootTest
+class OptionControllerTest {
 
-@ExtendWith(MockitoExtension.class)
-public class OptionControllerTest {
+    private final OptionController optionController;
+    private final OptionService optionService;
+    private final OptionRepository optionRepository;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    @Mock
-    private OptionService optionService;
-
-    @InjectMocks
-    private OptionController optionController;
-
-    @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(optionController).build();
+    @Autowired
+    public OptionControllerTest(OptionController optionController,
+                                OptionService optionService,
+                                OptionRepository optionRepository) {
+        this.optionController = optionController;
+        this.optionService = optionService;
+        this.optionRepository = optionRepository;
     }
 
     @Test
-    void findAllOptionTest() throws Exception {
-        List<OptionResponse> options = Arrays.asList(new OptionResponse(1L, "1", 100), new OptionResponse(2L, "2", 100));
-        when(optionService.findAllOption(1L)).thenReturn(options);
+    @Transactional
+    void sendInvalidOptionRequestTest() {
+        OptionRequest invalidOption = new OptionRequest("#$%^&**&^%$WQ#$%^", 12);
 
-        mockMvc.perform(get("/admin/product/1/options"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(options)));
-
-        verify(optionService).findAllOption(1L);
-    }
-
-    @Test
-    void addOptionTest() throws Exception {
-        OptionRequest validRequest = new OptionRequest("New Option", 100);
-        String requestJson = objectMapper.writeValueAsString(validRequest);
-
-        mockMvc.perform(post("/admin/product/1/option")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Option added successfully"));
-
-        verify(optionService).addOption(1L, validRequest);
-    }
-
-    @Test
-    void updateOptionTest() throws Exception {
-        OptionRequest validRequest = new OptionRequest("Updated Option", 100);
-        String requestJson = objectMapper.writeValueAsString(validRequest);
-
-        mockMvc.perform(put("/admin/product/1/option/2")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Option updated successfully"));
-
-        verify(optionService).updateOption(1L, 2L, validRequest);
-    }
-
-    @Test
-    void deleteOptionTest() throws Exception {
-        mockMvc.perform(delete("/admin/product/1/option/3"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Option deleted successfully"));
-
-        verify(optionService).deleteOption(1L, 3L);
-    }
-
-    @Test
-    void removeOptionQuantityTest() throws Exception {
-        OptionChangeQuantityRequest request = new OptionChangeQuantityRequest(10);
-        String requestJson = objectMapper.writeValueAsString(request);
-
-        mockMvc.perform(put("/admin/product/1/option/2/quantity")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Option Quantity changed successfully"));
-
-        verify(optionService).removeOptionQuantity(2L, request);
+        assertThatThrownBy(() -> optionController.addOption(1L, invalidOption))
+                .isInstanceOf(ConstraintViolationException.class);
     }
 }

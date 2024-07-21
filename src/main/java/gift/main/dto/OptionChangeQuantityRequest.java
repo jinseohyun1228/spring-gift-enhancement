@@ -1,14 +1,8 @@
 package gift.main.dto;
 
-import gift.main.Exception.CustomException;
-import gift.main.Exception.ErrorCode;
+import jakarta.validation.constraints.Min;
 
-public record OptionChangeQuantityRequest(int quantity) {
+public record OptionChangeQuantityRequest(
+        @Min(1) int quantity) {
 
-    public OptionChangeQuantityRequest {
-        if (quantity < 1 || quantity > 100000000) {
-            throw new CustomException(ErrorCode.INVALID_OPTION_QUANTITY);
-        }
-
-    }
 }

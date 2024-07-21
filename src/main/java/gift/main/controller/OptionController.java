@@ -4,6 +4,7 @@ import gift.main.dto.OptionChangeQuantityRequest;
 import gift.main.dto.OptionRequest;
 import gift.main.dto.OptionResponse;
 import gift.main.service.OptionService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,10 +44,9 @@ public class OptionController {
         return ResponseEntity.ok("Option deleted successfully");
     }
 
-    //
     @PostMapping("/{productId}/option")
     public ResponseEntity<?> addOption(@PathVariable(value = "productId") long productId,
-                                       @RequestBody OptionRequest optionRequest) {
+                                       @Valid @RequestBody OptionRequest optionRequest) {
         optionService.addOption(productId, optionRequest);
         return ResponseEntity.ok("Option added successfully");
     }
@@ -54,7 +54,7 @@ public class OptionController {
     @PutMapping("/{productId}/option/{optionId}")
     public ResponseEntity<?> updateOption(@PathVariable(value = "productId") long productId,
                                           @PathVariable(value = "optionId") long optionId,
-                                          @RequestBody OptionRequest optionRequest) {
+                                          @Valid @RequestBody OptionRequest optionRequest) {
         optionService.updateOption(productId, optionId, optionRequest);
         return ResponseEntity.ok("Option updated successfully");
     }
@@ -63,7 +63,7 @@ public class OptionController {
     @PutMapping("/{productId}/option/{optionId}/quantity")
     public ResponseEntity<?> removeOptionQuantity(@PathVariable(value = "productId") long productId,
                                                   @PathVariable(value = "optionId") long optionId,
-                                                  @RequestBody OptionChangeQuantityRequest optionChangeQuantityRequest) {
+                                                  @Valid @RequestBody OptionChangeQuantityRequest optionChangeQuantityRequest) {
         optionService.removeOptionQuantity(optionId, optionChangeQuantityRequest);
         return ResponseEntity.ok("Option Quantity changed successfully");
     }

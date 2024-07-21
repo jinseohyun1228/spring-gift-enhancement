@@ -51,7 +51,6 @@ public class OptionService {
 
     @Transactional
     public void addOption(long productId, OptionRequest optionRequest) {
-        System.out.println("그래서 이게 뭔데요");
         List<Option> options = validOptions(productId);
 
         options.stream().forEach(option -> option.isDuplicate(optionRequest));

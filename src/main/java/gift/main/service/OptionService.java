@@ -54,7 +54,7 @@ public class OptionService {
         Option targetOption = optionRepository.findById(optionId)
                 .orElseThrow(()-> new CustomException(ErrorCode.FAILED_OPTION_LOADING));
 
-        targetOption.remove();
+//        targetOption.remove();
 
         optionRepository.deleteById(optionId);
 
@@ -72,7 +72,7 @@ public class OptionService {
         Option newOption = new Option(optionRequest, product);
         Option saveOption = optionRepository.save(newOption);
 
-        saveOption.add();
+//        saveOption.add();
     }
 
     // *optionId: 옵션의 아이디

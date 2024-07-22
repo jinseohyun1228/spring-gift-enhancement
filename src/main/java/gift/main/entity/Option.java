@@ -80,21 +80,21 @@ public class Option {
 
     }
 
-    public void add() {
-        product.getOptions().add(this);
-    }
+//    public void add() {
+//        product.getOptions().add(this);
+//    }
 
     public void updateValue(OptionRequest optionRequest) {
         product.getOptions().remove(this);
         this.optionName = optionRequest.name();
         this.num = optionRequest.num();
-        product.getOptions().add(this);
+//        product.getOptions().add(this);
 
     }
 
-    public void remove() {
-        product.getOptions().remove(this);
-    }
+//    public void remove() {
+//        product.getOptions().remove(this);
+//    }
 
     @Override
     public boolean equals(Object o) {
